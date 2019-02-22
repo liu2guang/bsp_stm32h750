@@ -1,0 +1,15 @@
+menu "STM32 Bsp Config" 
+
+menu "Uart"
+    config BSP_ENABLE_UART
+        bool "Enable uart drive"
+        select RT_USING_SERIAL
+        default y      
+
+    config BSP_UART_ENABLE_PORT3
+        bool "Enable uart3 port"
+        depends on BSP_ENABLE_UART
+        default n    
+endmenu
+
+endmenu 

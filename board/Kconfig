@@ -1,0 +1,1 @@
+source "$BSP_DIR/board/drives/Kconfig" 

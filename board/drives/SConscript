@@ -1,0 +1,114 @@
+#-*- encoding: utf-8 -*-
+#---------------------------------------------------------------------------------
+# @File:   SConscript
+# @Author: liu2guang
+# @Date:   2019-01-31 23:44:00 
+# 
+# @LICENSE: MIT: https://github.com/rtpkgs/buildpkg/blob/master/LICENSE.
+#
+#---------------------------------------------------------------------------------
+import os
+from building import * 
+Import('RTT_ROOT')
+Import('rtconfig')
+
+#---------------------------------------------------------------------------------
+# Package configuration
+#---------------------------------------------------------------------------------
+PKGNAME = "Board"
+VERSION = "1.0.0"
+DEPENDS = [""]
+
+#---------------------------------------------------------------------------------
+# Compile the configuration 
+#
+# SOURCES: Need to compile c and c++ source, auto search when SOURCES is empty
+# 
+# LOCAL_CPPPATH: Local file path (.h/.c/.cpp)
+# LOCAL_CCFLAGS: Local compilation parameter 
+# LOCAL_ASFLAGS: Local assembly parameters
+# 
+# CPPPATH: Global file path (.h/.c/.cpp), auto search when LOCAL_CPPPATH/CPPPATH 
+#          is empty # no pass!!!
+# CCFLAGS: Global compilation parameter 
+# ASFLAGS: Global assembly parameters
+#
+# CPPDEFINES: Global macro definition
+# LOCAL_CPPDEFINES: Local macro definition 
+# 
+# LIBS: Specify the static library that need to be linked
+# LIBPATH: Specify the search directory for the library file (.lib/.a)
+#
+# LINKFLAGS: Link options
+#---------------------------------------------------------------------------------
+SOURCES          = [] 
+
+LOCAL_CPPPATH    = [] 
+LOCAL_CCFLAGS    = "" 
+LOCAL_ASFLAGS    = ""
+
+#CPPPATH          = [os.path.join(GetCurrentDir(), 'romfs')] 
+CPPPATH          = [] 
+CCFLAGS          = "" 
+ASFLAGS          = ""
+
+CPPDEFINES       = []
+LOCAL_CPPDEFINES = []
+
+LIBS             = [] 
+LIBPATH          = [] 
+
+LINKFLAGS        = "" 
+
+#---------------------------------------------------------------------------------
+# Feature clip configuration, optional 
+#---------------------------------------------------------------------------------
+
+# if GetDepend(['BSP_ENABLE_UART']):
+#     CPPPATH += [os.path.join(GetCurrentDir(), 'uart')] 
+#     SOURCES += ['uart/drv_usart.c']
+
+#---------------------------------------------------------------------------------
+# Compiler platform configuration, optional
+#---------------------------------------------------------------------------------
+
+#---------------------------------------------------------------------------------
+# Warning: internal related processing, developers do not modify!!! 
+#---------------------------------------------------------------------------------
+
+#---------------------------------------------------------------------------------
+# System variables
+#---------------------------------------------------------------------------------
+objs = [] 
+root = GetCurrentDir() 
+
+#---------------------------------------------------------------------------------
+# Sub target
+#---------------------------------------------------------------------------------
+list = os.listdir(root)
+if GetDepend(DEPENDS):
+    for d in list:
+        path = os.path.join(root, d)
+        if os.path.isfile(os.path.join(path, 'SConscript')):
+            objs = objs + SConscript(os.path.join(d, 'SConscript')) 
+
+#---------------------------------------------------------------------------------
+# Main target
+#---------------------------------------------------------------------------------
+objs = DefineGroup(name = PKGNAME, src = SOURCES, depend = DEPENDS, 
+                   CPPPATH          = CPPPATH, 
+                   CCFLAGS          = CCFLAGS, 
+                   ASFLAGS          = ASFLAGS, 
+                   LOCAL_CPPPATH    = LOCAL_CPPPATH, 
+                   LOCAL_CCFLAGS    = LOCAL_CCFLAGS, 
+                   LOCAL_ASFLAGS    = LOCAL_ASFLAGS, 
+                   CPPDEFINES       = CPPDEFINES, 
+                   LOCAL_CPPDEFINES = LOCAL_CPPDEFINES, 
+                   LIBS             = LIBS, 
+                   LIBPATH          = LIBPATH,
+                   LINKFLAGS        = LINKFLAGS)  
+
+Return("objs") 
+#---------------------------------------------------------------------------------
+# End
+#---------------------------------------------------------------------------------

@@ -1,0 +1,33 @@
+mainmenu "RT-Thread Configuration"
+
+# Bsp Path
+config $BSP_DIR
+    string
+    option env="BSP_ROOT"
+    default "."
+
+# RT-Thread Path
+config $RTT_DIR
+    string
+    default "rt-thread"
+
+# Package Path
+config $PKGS_DIR
+    string
+    option env="PKGS_ROOT"
+    default "packages"
+
+# Config Bsp CPU is ARM CORTEX M4
+config SOC_STM32H750VB
+    bool 
+    select ARCH_ARM_CORTEX_M7
+    default y
+
+# RT-Thread Kernel Configuration
+source "$RTT_DIR/Kconfig"
+
+# Online Package Configuration
+source "$PKGS_DIR/Kconfig"
+
+# Bsp board Configuration
+source "$BSP_DIR/board/Kconfig" 
