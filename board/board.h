@@ -28,16 +28,20 @@
     #define HEAP_BEGIN ((void *)&__bss_end)
 #endif
 
-#define BOARD_SRAM_BEGIN (void *)(0x20000000u)
-#define BOARD_SRAM_END   (void *)(0x20020000u)
-#define BOARD_SRAM_SIZE  (((rt_uint32_t)(BOARD_SRAM_END))-((rt_uint32_t)(BOARD_SRAM_BEGIN)))
+#define BOARD_SRAM1_BEGIN (void *)(0x20000000u)
+#define BOARD_SRAM1_END   (void *)(0x20020000u)
+#define BOARD_SRAM1_SIZE  (((rt_uint32_t)(BOARD_SRAM1_END))-((rt_uint32_t)(BOARD_SRAM1_BEGIN)))
 
-//#define BOARD_DRAM_BEGIN (void *)(0xC0000000u)
-//#define BOARD_DRAM_END   (void *)(0xC0800000u)
-//#define BOARD_DRAM_SIZE  (((rt_uint32_t)(BOARD_DRAM_END))-((rt_uint32_t)(BOARD_DRAM_BEGIN)))
+#define BOARD_SRAM2_BEGIN (void *)(0x24000000u)
+#define BOARD_SRAM2_END   (void *)(0x24080000u)
+#define BOARD_SRAM2_SIZE  (((rt_uint32_t)(BOARD_SRAM2_END))-((rt_uint32_t)(BOARD_SRAM2_BEGIN)))
+
+//#define BOARD_DRAM1_BEGIN (void *)(0xC0000000u)
+//#define BOARD_DRAM1_END   (void *)(0xC0800000u)
+//#define BOARD_DRAM1_SIZE  (((rt_uint32_t)(BOARD_DRAM_END))-((rt_uint32_t)(BOARD_DRAM_BEGIN)))
 
 #define BOARD_HEAP_BEGIN (void *)(HEAP_BEGIN)
-#define BOARD_HEAP_END   (void *)(BOARD_SRAM_END)
+#define BOARD_HEAP_END   (void *)(BOARD_SRAM1_END)
 #define BOARD_HEAP_SIZE  (((rt_uint32_t)(BOARD_HEAP_END))-((rt_uint32_t)(BOARD_HEAP_BEGIN)))
 
 #endif

@@ -7,6 +7,10 @@
 #include <rtthread.h> 
 #include "board.h"
 
+#if defined(RT_USING_MEMHEAP_AS_HEAP)
+static struct rt_memheap system_heap;
+#endif
+
 void SystemClock_Config(void)
 {
     HAL_StatusTypeDef ret = HAL_OK;
@@ -81,7 +85,6 @@ void SysTick_Handler(void)
 HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
 {
     HAL_SYSTICK_Config(SystemCoreClock / RT_TICK_PER_SECOND);
-    //HAL_NVIC_SetPriority(SysTick_IRQn, TickPriority, 0);
     HAL_SYSTICK_CLKSourceConfig(SYSTICK_CLKSOURCE_HCLK);
 
     return HAL_OK;
@@ -123,7 +126,7 @@ void rt_hw_board_init(void)
     SCB->CPACR |= ((3UL << 10*2)|(3UL << 11*2));  /* set CP10 and CP11 Full Access */
 #endif
 
-    /* Configure the system clock @ 180 MHz */
+    /* Configure the system clock @ 400 MHz */
     SystemClock_Config(); 
     HAL_Init();
 
@@ -135,7 +138,10 @@ void rt_hw_board_init(void)
     rt_console_set_device(RT_CONSOLE_DEVICE_NAME);
 #endif
 
-#ifdef RT_USING_HEAP
+#if defined(RT_USING_MEMHEAP_AS_HEAP)
+    rt_system_heap_init(BOARD_HEAP_BEGIN, BOARD_HEAP_END);
+    rt_memheap_init(&system_heap, "sram2", BOARD_SRAM2_BEGIN, BOARD_SRAM2_SIZE);
+#else
     rt_system_heap_init(BOARD_HEAP_BEGIN, BOARD_HEAP_END);
 #endif
 }
