@@ -3,10 +3,11 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#include "rtthread.h"
-#include "board.h" 
+#include "rtquick.h" 
 
 int main(void)
-{       
+{      
+    rtquick_init(); 
+    
     return 0; 
 }

@@ -1,0 +1,26 @@
+# ################################################################################
+# @File:   bsp.LICENSE
+# @Author: liu2guang
+# @Date:   2019-02-23 23:16:00
+# 
+#                _____                                                            
+#               /     \                                                           
+#               vvvvvvv  /|__/|                                                   
+#                  I   /O,O   |                                                   
+#                  I /_____   |      /|/|                                         
+#                 J|/^ ^ ^ \  |    /00  |    _//|                                 
+#                  |^ ^ ^ ^ |W|   |/^^\ |   /oo |                                 
+#                   \m___m__|_|    \m_m_|   \mm_|                                 
+#
+#                                                           Test with BSP         
+#                                                           --- liu2guang         
+#
+# @Author      : https://github.com/liu2guang
+# @Repository  : https://github.com/liu2guang/bsp_stm32h750
+# @LICENSE: MIT: https://github.com/liu2guang/bsp_stm32h750/blob/master/LICENSE.
+#
+# Change Logs:
+# Date           Author       Notes 
+# 2019-02-23     liu2guang    The first version. 
+#
+# ################################################################################

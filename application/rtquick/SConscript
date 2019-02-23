@@ -15,7 +15,7 @@ Import('rtconfig')
 #---------------------------------------------------------------------------------
 # Package configuration
 #---------------------------------------------------------------------------------
-PKGNAME = "Board"
+PKGNAME = "rtquick"
 VERSION = "1.0.0"
 DEPENDS = [""]
 
@@ -41,14 +41,13 @@ DEPENDS = [""]
 #
 # LINKFLAGS: Link options
 #---------------------------------------------------------------------------------
-SOURCES          = ["romfs/drv_romfs.c"] 
+SOURCES          = ["rtquick_init.c", "rtquick_utils.c", "rtquick_mnt.c"] 
 
 LOCAL_CPPPATH    = [] 
 LOCAL_CCFLAGS    = "" 
 LOCAL_ASFLAGS    = ""
 
-#CPPPATH          = [os.path.join(GetCurrentDir(), 'romfs')] 
-CPPPATH          = [] 
+CPPPATH          = [GetCurrentDir()] 
 CCFLAGS          = "" 
 ASFLAGS          = ""
 
@@ -64,10 +63,6 @@ LINKFLAGS        = ""
 # Feature clip configuration, optional 
 #---------------------------------------------------------------------------------
 
-if GetDepend(['BSP_ENABLE_UART']):
-    CPPPATH += [os.path.join(GetCurrentDir(), 'uart')] 
-    SOURCES += ['uart/drv_usart.c']
-
 #---------------------------------------------------------------------------------
 # Compiler platform configuration, optional
 #---------------------------------------------------------------------------------
@@ -79,18 +74,8 @@ if GetDepend(['BSP_ENABLE_UART']):
 #---------------------------------------------------------------------------------
 # System variables
 #---------------------------------------------------------------------------------
-objs = [] 
-root = GetCurrentDir() 
-
-#---------------------------------------------------------------------------------
-# Sub target
-#---------------------------------------------------------------------------------
-list = os.listdir(root)
-if GetDepend(DEPENDS):
-    for d in list:
-        path = os.path.join(root, d)
-        if os.path.isfile(os.path.join(path, 'SConscript')):
-            objs = objs + SConscript(os.path.join(d, 'SConscript')) 
+objs   = [] 
+root   = GetCurrentDir() 
 
 #---------------------------------------------------------------------------------
 # Main target
@@ -108,7 +93,18 @@ objs = DefineGroup(name = PKGNAME, src = SOURCES, depend = DEPENDS,
                    LIBPATH          = LIBPATH,
                    LINKFLAGS        = LINKFLAGS)  
 
+#---------------------------------------------------------------------------------
+# Sub target
+#---------------------------------------------------------------------------------
+list = os.listdir(root)
+if GetDepend(DEPENDS):
+    for d in list:
+        path = os.path.join(root, d)
+        if os.path.isfile(os.path.join(path, 'SConscript')):
+            objs = objs + SConscript(os.path.join(d, 'SConscript')) 
+
 Return("objs") 
 #---------------------------------------------------------------------------------
 # End
 #---------------------------------------------------------------------------------
+

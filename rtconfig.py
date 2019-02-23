@@ -29,7 +29,7 @@ if os.getenv('RTT_EXEC_PATH'):
 
 BUILD = 'debug' #release
 
-# os.system("python rt-thread/tools/mkromfs.py board/romfs/ board/drives/romfs/drv_romfs.c")
+os.system("python rt-thread/tools/mkromfs.py board/romfs/ board/drives/romfs/drv_romfs.c")
 
 if PLATFORM == 'gcc':
     # tool-chains
