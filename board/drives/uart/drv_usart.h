@@ -9,5 +9,7 @@
  */
 #ifndef __DRV_USART_H__
 #define __DRV_USART_H__
+
 extern int bsp_usart_hw_init(void);
+
 #endif

@@ -10,12 +10,12 @@
 #include "stm32h7xx.h"
 #include "stm32h7xx_hal.h"
 
-/* STM32F469NI-Discovery Board drivers */ 
+/* RTTGameBoard drivers */ 
 
-/* STM32F469NI-Discovery Board pin number */ 
+/* RTTGameBoard pin number */ 
 #define STM32_PIN_NUM   (100)
 
-/* STM32F469NI-Discovery Board Memory Map */ 
+/* RTTGameBoard Memory Map */ 
 
 #if defined(__CC_ARM) || defined(__CLANG_ARM)
     extern int Image$$RW_IRAM1$$ZI$$Limit;
@@ -36,9 +36,9 @@
 #define BOARD_SRAM2_END   (void *)(0x24080000u)
 #define BOARD_SRAM2_SIZE  (((rt_uint32_t)(BOARD_SRAM2_END))-((rt_uint32_t)(BOARD_SRAM2_BEGIN)))
 
-//#define BOARD_DRAM1_BEGIN (void *)(0xC0000000u)
-//#define BOARD_DRAM1_END   (void *)(0xC0800000u)
-//#define BOARD_DRAM1_SIZE  (((rt_uint32_t)(BOARD_DRAM_END))-((rt_uint32_t)(BOARD_DRAM_BEGIN)))
+#define BOARD_PSRAM_BEGIN (void *)(0xC0000000u)
+#define BOARD_PSRAM_END   (void *)(0xC0800000u)
+#define BOARD_PSRAM_SIZE  (((rt_uint32_t)(BOARD_PSRAM_END))-((rt_uint32_t)(BOARD_PSRAM_BEGIN)))
 
 #define BOARD_HEAP_BEGIN (void *)(HEAP_BEGIN)
 #define BOARD_HEAP_END   (void *)(BOARD_SRAM1_END)
