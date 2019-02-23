@@ -34,6 +34,8 @@ STM32H750VB 板级包支持MDK5开发环境和GCC编译器，以下是具体版�
 | 驱动 | 支持情况  |
 | :------ | :----  |
 | UART | 支持串口3 |
+| SDCARD | 支持轮询方式, DMA暂时没调, 读7.3MB/s, 写4.5MB/s |
+| romfs | 支持 |
 
 ## 5. 维护人信息
 - liu2guang: [Github](https://github.com/liu2guang). 
