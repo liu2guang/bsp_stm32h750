@@ -64,9 +64,9 @@ LINKFLAGS        = ""
 # Feature clip configuration, optional 
 #---------------------------------------------------------------------------------
 
-# if GetDepend(['BSP_ENABLE_UART']):
-#     CPPPATH += [os.path.join(GetCurrentDir(), 'uart')] 
-#     SOURCES += ['uart/drv_usart.c']
+if GetDepend(['BSP_ENABLE_UART']):
+    CPPPATH += [os.path.join(GetCurrentDir(), 'uart')] 
+    SOURCES += ['uart/drv_usart.c']
 
 #---------------------------------------------------------------------------------
 # Compiler platform configuration, optional
