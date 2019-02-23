@@ -68,6 +68,10 @@ if GetDepend(['BSP_ENABLE_UART']):
     CPPPATH += [os.path.join(GetCurrentDir(), 'uart')] 
     SOURCES += ['uart/drv_usart.c']
 
+if GetDepend(['BSP_ENABLE_SDCARD']):
+    CPPPATH += [os.path.join(GetCurrentDir(), 'sdcard')] 
+    SOURCES += ['sdcard/drv_sdcard.c']
+
 #---------------------------------------------------------------------------------
 # Compiler platform configuration, optional
 #---------------------------------------------------------------------------------

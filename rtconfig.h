@@ -80,6 +80,18 @@
 #define DFS_FILESYSTEMS_MAX 4
 #define DFS_FILESYSTEM_TYPES_MAX 4
 #define DFS_FD_MAX 8
+#define RT_USING_DFS_ELMFAT
+
+/* elm-chan's FatFs, Generic FAT Filesystem Module */
+
+#define RT_DFS_ELM_CODE_PAGE 437
+#define RT_DFS_ELM_WORD_ACCESS
+#define RT_DFS_ELM_USE_LFN_3
+#define RT_DFS_ELM_USE_LFN 3
+#define RT_DFS_ELM_MAX_LFN 255
+#define RT_DFS_ELM_DRIVES 2
+#define RT_DFS_ELM_MAX_SECTOR_SIZE 512
+#define RT_DFS_ELM_REENTRANT
 #define RT_USING_DFS_DEVFS
 #define RT_USING_DFS_ROMFS
 
@@ -170,5 +182,11 @@
 
 #define BSP_ENABLE_UART
 #define BSP_UART_ENABLE_PORT3
+
+/* SDCRAD */
+
+#define BSP_ENABLE_SDCARD
+#define BSP_SDCARD_ENABLE_AUTO_MOUNT
+#define BSP_SDCARD_CONFIG_MOUNT_POINT "/mnt/sdcard"
 
 #endif

@@ -62,7 +62,8 @@ void SystemClock_Config(void)
         while(1);
     }
     
-    PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_USART3;
+    PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_USART3 | RCC_PERIPHCLK_SDMMC;
+    PeriphClkInitStruct.SdmmcClockSelection = RCC_SDMMCCLKSOURCE_PLL;
     PeriphClkInitStruct.Usart234578ClockSelection = RCC_USART234578CLKSOURCE_D2PCLK1;
     
     ret = HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct);
@@ -92,7 +93,7 @@ HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
 
 void HAL_Delay(__IO uint32_t Delay)
 {
-    rt_thread_delay(Delay);
+    rt_thread_mdelay(Delay);
 }
 
 void HAL_SuspendTick(void)

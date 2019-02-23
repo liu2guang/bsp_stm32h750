@@ -12,4 +12,22 @@ menu "Uart"
         default n    
 endmenu
 
+menu "SDCRAD"
+    config BSP_ENABLE_SDCARD
+        bool "Enable sdcard drive" 
+        default y 
+        select RT_USING_DFS
+        select RT_USING_DFS_ELMFAT
+
+    config BSP_SDCARD_ENABLE_AUTO_MOUNT
+        bool "Enable sdcard auto mount mode" 
+        default y 
+        depends on BSP_ENABLE_SDCARD
+    
+    config BSP_SDCARD_CONFIG_MOUNT_POINT
+        string "Mount point"
+        default "/mnt/sdcard" 
+        depends on BSP_SDCARD_ENABLE_AUTO_MOUNT
+endmenu
+
 endmenu 

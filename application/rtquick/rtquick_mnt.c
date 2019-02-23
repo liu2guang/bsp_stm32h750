@@ -19,5 +19,16 @@ rt_err_t rtquick_mnt_init(void)
     extern struct romfs_dirent romfs_root;
     dfs_mount(RT_NULL, "/", "rom", 0, &romfs_root); 
 
+#if defined(BSP_SDCARD_ENABLE_AUTO_MOUNT)
+    if(dfs_mount("sd0", BSP_SDCARD_CONFIG_MOUNT_POINT, "elm", 0, 0) != 0)
+    {
+        rt_kprintf("sd0 mount '%s' failed.\n", BSP_SDCARD_CONFIG_MOUNT_POINT); 
+    }
+    
+    /* 切换目录到SD卡 */ 
+    extern int chdir(const char *path); 
+    chdir(BSP_SDCARD_CONFIG_MOUNT_POINT); 
+#endif
+
     return ret; 
 }
