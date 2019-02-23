@@ -15,8 +15,6 @@ void SystemClock_Config(void)
     RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
     RCC_PeriphCLKInitTypeDef PeriphClkInitStruct = {0};
     
-    __HAL_RCC_SYSCFG_CLK_ENABLE();
-
     MODIFY_REG(PWR->CR3, PWR_CR3_SCUEN, 0);
     __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
     while(!__HAL_PWR_GET_FLAG(PWR_FLAG_VOSRDY)) {}
@@ -82,8 +80,9 @@ void SysTick_Handler(void)
 
 HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
 {
-    HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq() / RT_TICK_PER_SECOND);
-    HAL_NVIC_SetPriority(SysTick_IRQn, TickPriority, 0);
+    HAL_SYSTICK_Config(SystemCoreClock / RT_TICK_PER_SECOND);
+    //HAL_NVIC_SetPriority(SysTick_IRQn, TickPriority, 0);
+    HAL_SYSTICK_CLKSourceConfig(SYSTICK_CLKSOURCE_HCLK);
 
     return HAL_OK;
 }
@@ -105,6 +104,8 @@ void HAL_ResumeTick(void)
 
 void HAL_MspInit(void)
 {
+    __HAL_RCC_SYSCFG_CLK_ENABLE();
+    
     HAL_NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_4);
     HAL_NVIC_SetPriority(MemoryManagement_IRQn, 0, 0);
     HAL_NVIC_SetPriority(BusFault_IRQn, 0, 0);
