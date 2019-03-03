@@ -41,7 +41,7 @@ DEPENDS = [""]
 #
 # LINKFLAGS: Link options
 #---------------------------------------------------------------------------------
-SOURCES          = ["romfs/drv_romfs.c"] 
+SOURCES          = ["romfs/drv_romfs.c", "cache/drv_cache.c"] 
 
 LOCAL_CPPPATH    = [] 
 LOCAL_CCFLAGS    = "" 
@@ -68,9 +68,25 @@ if GetDepend(['BSP_ENABLE_UART']):
     CPPPATH += [os.path.join(GetCurrentDir(), 'uart')] 
     SOURCES += ['uart/drv_usart.c']
 
+if GetDepend(['BSP_ENABLE_PIN']):
+    CPPPATH += [os.path.join(GetCurrentDir(), 'pin')] 
+    SOURCES += ['pin/drv_pin.c']
+
 if GetDepend(['BSP_ENABLE_SDCARD']):
     CPPPATH += [os.path.join(GetCurrentDir(), 'sdcard')] 
     SOURCES += ['sdcard/drv_sdcard.c']
+
+if GetDepend(['BSP_ENABLE_SPI']):
+    CPPPATH += [os.path.join(GetCurrentDir(), 'spi')] 
+    SOURCES += ['spi/drv_spi.c']
+
+if GetDepend(['BSP_ENABLE_LCD']):
+    CPPPATH += [os.path.join(GetCurrentDir(), 'lcd')] 
+    SOURCES += ['lcd/drv_lcd.c']
+
+if GetDepend(['BSP_ENABLE_QSPI']):
+    CPPPATH += [os.path.join(GetCurrentDir(), 'qspi')] 
+    SOURCES += ['qspi/drv_qspi.c', 'qspi/stm32_qspi.c']
 
 #---------------------------------------------------------------------------------
 # Compiler platform configuration, optional

@@ -15,6 +15,12 @@
 /* RTTGameBoard pin number */ 
 #define STM32_PIN_NUM   (100)
 
+#define LED01 (69)
+#define LED02 (68)
+#define LED03 (67)
+#define LED04 (66)
+#define LED05 (65)
+
 /* RTTGameBoard Memory Map */ 
 
 #if defined(__CC_ARM) || defined(__CLANG_ARM)

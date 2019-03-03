@@ -1,6 +1,6 @@
 menu "STM32 Bsp Config" 
 
-menu "Uart"
+menu "UART"
     config BSP_ENABLE_UART
         bool "Enable uart drive"
         select RT_USING_SERIAL
@@ -10,6 +10,13 @@ menu "Uart"
         bool "Enable uart3 port"
         depends on BSP_ENABLE_UART
         default n    
+endmenu
+
+menu "PIN"
+    config BSP_ENABLE_PIN
+        bool "Enable pin drive"
+        select RT_USING_PIN
+        default y       
 endmenu
 
 menu "SDCRAD"
@@ -28,6 +35,38 @@ menu "SDCRAD"
         string "Mount point"
         default "/mnt/sdcard" 
         depends on BSP_SDCARD_ENABLE_AUTO_MOUNT
+endmenu
+
+menu "SPI"
+    config BSP_ENABLE_SPI
+        bool "Enable spi bus drive"
+        select RT_USING_SPI
+        default n     
+
+    config BSP_SPI_ENABLE_PORT3
+        bool "Enable spi3 bus port"
+        depends on BSP_ENABLE_SPI
+        default n   
+
+    config BSP_SPI_ENABLE_PORT4
+        bool "Enable spi4 bus port"
+        depends on BSP_ENABLE_SPI
+        default n        
+endmenu
+
+menu "LCD"
+    config BSP_ENABLE_LCD
+        bool "Enable lcd drive"
+        select RT_USING_SPI
+        default n       
+endmenu
+
+menu "QSPI"
+    config BSP_ENABLE_QSPI
+        bool "Enable qspi flash drive"
+        select RT_USING_SPI
+        select RT_USING_QSPI
+        default n       
 endmenu
 
 endmenu 

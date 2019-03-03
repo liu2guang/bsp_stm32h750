@@ -42,7 +42,7 @@
 #define RT_USING_CONSOLE
 #define RT_CONSOLEBUF_SIZE 1024
 #define RT_CONSOLE_DEVICE_NAME "uart3"
-#define RT_VER_NUM 0x40000
+#define RT_VER_NUM 0x40001
 #define ARCH_ARM
 #define ARCH_ARM_CORTEX_M
 #define ARCH_ARM_CORTEX_M7
@@ -101,6 +101,11 @@
 #define RT_PIPE_BUFSZ 512
 #define RT_USING_SERIAL
 #define RT_SERIAL_USING_DMA
+#define RT_SERIAL_RB_BUFSZ 64
+#define RT_USING_I2C
+#define RT_USING_I2C_BITOPS
+#define RT_USING_PIN
+#define RT_USING_SPI
 
 /* Using WiFi */
 
@@ -110,6 +115,8 @@
 
 /* POSIX layer and C standard library */
 
+#define RT_USING_LIBC
+#define RT_USING_POSIX
 
 /* Network */
 
@@ -176,17 +183,39 @@
 /* samples: kernel and components samples */
 
 
+/* Privated Packages of RealThread */
+
+
+/* Network Utilities */
+
+
 /* STM32 Bsp Config */
 
-/* Uart */
+/* UART */
 
 #define BSP_ENABLE_UART
 #define BSP_UART_ENABLE_PORT3
+
+/* PIN */
+
+#define BSP_ENABLE_PIN
 
 /* SDCRAD */
 
 #define BSP_ENABLE_SDCARD
 #define BSP_SDCARD_ENABLE_AUTO_MOUNT
 #define BSP_SDCARD_CONFIG_MOUNT_POINT "/mnt/sdcard"
+
+/* SPI */
+
+#define BSP_ENABLE_SPI
+#define BSP_SPI_ENABLE_PORT3
+
+/* LCD */
+
+#define BSP_ENABLE_LCD
+
+/* QSPI */
+
 
 #endif

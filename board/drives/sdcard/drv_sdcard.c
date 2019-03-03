@@ -353,8 +353,8 @@ int rt_hw_sdcard_init(void)
         RT_DEVICE_FLAG_RDWR | RT_DEVICE_FLAG_REMOVABLE | RT_DEVICE_FLAG_STANDALONE);
     if(ret != RT_EOK)
     {
-        /* Deinit code */
-        return RT_ERROR;
+        rt_kprintf("sdcard init failed\n");
+        return (-RT_ERROR);
     }
 
     return RT_EOK;
