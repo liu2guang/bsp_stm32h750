@@ -61,12 +61,4 @@ menu "LCD"
         default n       
 endmenu
 
-menu "QSPI"
-    config BSP_ENABLE_QSPI
-        bool "Enable qspi flash drive"
-        select RT_USING_SPI
-        select RT_USING_QSPI
-        default n       
-endmenu
-
 endmenu 

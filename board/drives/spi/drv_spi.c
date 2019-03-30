@@ -46,19 +46,21 @@ static struct rt_spi_bus spi4_bus = {.parent.user_data = &spi4};
 static rt_uint32_t get_spi_clk_source_freq(SPI_HandleTypeDef *hspi)
 {
     rt_uint32_t freq = 0;
-    PLL1_ClocksTypeDef pll1 = {0}; 
 
 #if defined(BSP_SPI_ENABLE_PORT3)
     if(hspi->Instance == SPI3)
     {
+        PLL1_ClocksTypeDef pll1 = {0}; 
+        
         HAL_RCCEx_GetPLL1ClockFreq(&pll1); 
         freq = (rt_uint32_t)pll1.PLL1_Q_Frequency; 
     }
+#endif
 
+#if defined(BSP_SPI_ENABLE_PORT4)
     if(hspi->Instance == SPI4)
     {
-        HAL_RCCEx_GetPLL1ClockFreq(&pll1); 
-        freq = (rt_uint32_t)pll1.PLL1_Q_Frequency; 
+        freq = (rt_uint32_t)(200 * 1000000); 
     }
 #endif 
 
@@ -230,7 +232,11 @@ static rt_uint32_t spixfer(struct rt_spi_device *device, struct rt_spi_message *
     }
     else
     {
-        HAL_SPI_TransmitReceive(&(hspi->hspi), (rt_uint8_t *)(message->send_buf), (rt_uint8_t *)(message->recv_buf), message->length, 10); 
+        if(HAL_SPI_TransmitReceive(&(hspi->hspi), (rt_uint8_t *)(message->send_buf), (rt_uint8_t *)(message->recv_buf), message->length, 10) != HAL_OK)  
+        {
+            //LOG_D("HAL_SPI_TransmitReceive failed."); 
+            goto _failed; 
+        }
     }
 
     while (HAL_SPI_GetState(&(hspi->hspi)) != HAL_SPI_STATE_READY);
@@ -241,6 +247,14 @@ static rt_uint32_t spixfer(struct rt_spi_device *device, struct rt_spi_message *
     }
 
     return message->length;
+    
+_failed:
+    if (message->cs_release)
+    {
+        rt_pin_write(cs->pin, PIN_HIGH);
+    }
+    
+    return 0; 
 }
 
 rt_err_t stm32_spi_bus_attach_device(const char *bus_name, const char *device_name, rt_uint32_t pin)
@@ -262,40 +276,72 @@ rt_err_t stm32_spi_bus_attach_device(const char *bus_name, const char *device_na
     return ret; 
 }
 
+void HAL_SPI_MspInit(SPI_HandleTypeDef *hspi)
+{
+    GPIO_InitTypeDef GPIO_InitStruct = {0};
+   
+#if defined(BSP_SPI_ENABLE_PORT3)     
+    if(hspi->Instance == SPI3)
+    {
+        __HAL_RCC_SPI3_CLK_ENABLE();
+        __HAL_RCC_GPIOC_CLK_ENABLE();
+
+        GPIO_InitStruct.Pin       = GPIO_PIN_10 | GPIO_PIN_12;
+        GPIO_InitStruct.Mode      = GPIO_MODE_AF_PP;
+        GPIO_InitStruct.Pull      = GPIO_NOPULL;
+        GPIO_InitStruct.Speed     = GPIO_SPEED_FREQ_VERY_HIGH;
+        GPIO_InitStruct.Alternate = GPIO_AF6_SPI3;
+        HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);  
+    }
+#endif
+    
+#if defined(BSP_SPI_ENABLE_PORT4)   
+    if(hspi->Instance == SPI4)
+    {
+        __HAL_RCC_SPI4_CLK_ENABLE();
+        __HAL_RCC_GPIOE_CLK_ENABLE();
+
+        GPIO_InitStruct.Pin       = GPIO_PIN_12 | GPIO_PIN_13 | GPIO_PIN_14;
+        GPIO_InitStruct.Mode      = GPIO_MODE_AF_PP;
+        GPIO_InitStruct.Pull      = GPIO_NOPULL;
+        GPIO_InitStruct.Speed     = GPIO_SPEED_FREQ_VERY_HIGH;
+        GPIO_InitStruct.Alternate = GPIO_AF5_SPI4;
+        HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
+    }
+#endif
+}
+
+void HAL_SPI_MspDeInit(SPI_HandleTypeDef *hspi)
+{
+#if defined(BSP_SPI_ENABLE_PORT3)     
+    if(hspi->Instance == SPI3)
+    {
+        __HAL_RCC_SPI3_CLK_DISABLE(); 
+        HAL_GPIO_DeInit(GPIOC, GPIO_PIN_10 | GPIO_PIN_12);  
+    }
+#endif
+    
+#if defined(BSP_SPI_ENABLE_PORT4)   
+    if(hspi->Instance == SPI4)
+    {
+        __HAL_RCC_SPI4_CLK_DISABLE();
+        HAL_GPIO_DeInit(GPIOE, GPIO_PIN_12 | GPIO_PIN_13 | GPIO_PIN_14);  
+    }
+#endif 
+}
+
 static struct rt_spi_ops ops = {configure, spixfer}; 
 
 int rt_hw_spi_init(void)
 {
-    GPIO_InitTypeDef GPIO_InitStruct = {0};
-
 #if defined(BSP_SPI_ENABLE_PORT3) 
-    __HAL_RCC_SPI3_CLK_ENABLE();
-    __HAL_RCC_GPIOC_CLK_ENABLE();
-
-    GPIO_InitStruct.Pin       = GPIO_PIN_10 | GPIO_PIN_12;
-    GPIO_InitStruct.Mode      = GPIO_MODE_AF_PP;
-    GPIO_InitStruct.Pull      = GPIO_NOPULL;
-    GPIO_InitStruct.Speed     = GPIO_SPEED_FREQ_VERY_HIGH;
-    GPIO_InitStruct.Alternate = GPIO_AF6_SPI3;
-    HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-
     rt_spi_bus_register(&spi3_bus, "spi3", &ops); 
 #endif
 
 #if defined(BSP_SPI_ENABLE_PORT4)
-    __HAL_RCC_SPI4_CLK_ENABLE();
-    __HAL_RCC_GPIOE_CLK_ENABLE();
-
-    GPIO_InitStruct.Pin       = GPIO_PIN_12 | GPIO_PIN_13 | GPIO_PIN_14;
-    GPIO_InitStruct.Mode      = GPIO_MODE_AF_PP;
-    GPIO_InitStruct.Pull      = GPIO_NOPULL;
-    GPIO_InitStruct.Speed     = GPIO_SPEED_FREQ_VERY_HIGH;
-    GPIO_InitStruct.Alternate = GPIO_AF5_SPI4;
-    HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
-
     rt_spi_bus_register(&spi4_bus, "spi4", &ops); 
 #endif
 
     return RT_EOK; 
 }
-INIT_BOARD_EXPORT(rt_hw_spi_init); 
+INIT_DEVICE_EXPORT(rt_hw_spi_init);

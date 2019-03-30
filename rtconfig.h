@@ -79,7 +79,7 @@
 #define DFS_USING_WORKDIR
 #define DFS_FILESYSTEMS_MAX 4
 #define DFS_FILESYSTEM_TYPES_MAX 4
-#define DFS_FD_MAX 8
+#define DFS_FD_MAX 16
 #define RT_USING_DFS_ELMFAT
 
 /* elm-chan's FatFs, Generic FAT Filesystem Module */
@@ -106,6 +106,7 @@
 #define RT_USING_I2C_BITOPS
 #define RT_USING_PIN
 #define RT_USING_SPI
+#define RT_USING_QSPI
 
 /* Using WiFi */
 
@@ -125,6 +126,42 @@
 
 /* light weight TCP/IP stack */
 
+#define RT_USING_LWIP
+#define RT_USING_LWIP202
+#define RT_LWIP_IGMP
+#define RT_LWIP_ICMP
+#define RT_LWIP_DNS
+#define RT_LWIP_DHCP
+#define IP_SOF_BROADCAST 1
+#define IP_SOF_BROADCAST_RECV 1
+
+/* Static IPv4 Address */
+
+#define RT_LWIP_IPADDR "192.168.1.30"
+#define RT_LWIP_GWADDR "192.168.1.1"
+#define RT_LWIP_MSKADDR "255.255.255.0"
+#define RT_LWIP_UDP
+#define RT_LWIP_TCP
+#define RT_MEMP_NUM_NETCONN 8
+#define RT_LWIP_PBUF_NUM 16
+#define RT_LWIP_RAW_PCB_NUM 4
+#define RT_LWIP_UDP_PCB_NUM 4
+#define RT_LWIP_TCP_PCB_NUM 4
+#define RT_LWIP_TCP_SEG_NUM 40
+#define RT_LWIP_TCP_SND_BUF 8196
+#define RT_LWIP_TCP_WND 8196
+#define RT_LWIP_TCPTHREAD_PRIORITY 10
+#define RT_LWIP_TCPTHREAD_MBOX_SIZE 8
+#define RT_LWIP_TCPTHREAD_STACKSIZE 1024
+#define RT_LWIP_ETHTHREAD_PRIORITY 12
+#define RT_LWIP_ETHTHREAD_STACKSIZE 1024
+#define RT_LWIP_ETHTHREAD_MBOX_SIZE 8
+#define LWIP_NETIF_STATUS_CALLBACK 1
+#define SO_REUSE 1
+#define LWIP_SO_RCVTIMEO 1
+#define LWIP_SO_SNDTIMEO 1
+#define LWIP_SO_RCVBUF 1
+#define LWIP_NETIF_LOOPBACK 0
 
 /* Modbus master and slave stack */
 
@@ -153,6 +190,15 @@
 
 /* Wiced WiFi */
 
+#define PKG_USING_RW007
+#define PKG_USING_RW007_LATEST_VERSION
+#define RW007_USING_STM32_DRIVERS
+#define RW007_SPI_BUS_NAME "spi4"
+#define RW007_CS_PIN 41
+#define RW007_BOOT0_PIN 42
+#define RW007_BOOT1_PIN 41
+#define RW007_INT_BUSY_PIN 46
+#define RW007_RST_PIN 45
 
 /* IoT Cloud */
 
@@ -162,6 +208,9 @@
 
 /* language packages */
 
+#define PKG_USING_LUA
+#define PKG_USING_LUA_V100
+#define LUA_USING_PORTING_V534
 
 /* multimedia packages */
 
@@ -209,13 +258,9 @@
 /* SPI */
 
 #define BSP_ENABLE_SPI
-#define BSP_SPI_ENABLE_PORT3
+#define BSP_SPI_ENABLE_PORT4
 
 /* LCD */
-
-#define BSP_ENABLE_LCD
-
-/* QSPI */
 
 
 #endif

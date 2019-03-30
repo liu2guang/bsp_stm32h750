@@ -41,7 +41,7 @@ DEPENDS = [""]
 #
 # LINKFLAGS: Link options
 #---------------------------------------------------------------------------------
-SOURCES          = ["romfs/drv_romfs.c", "cache/drv_cache.c"] 
+SOURCES          = ["cache/drv_cache.c", "flash/drv_flash.c"]  
 
 LOCAL_CPPPATH    = [] 
 LOCAL_CCFLAGS    = "" 
@@ -64,6 +64,10 @@ LINKFLAGS        = ""
 # Feature clip configuration, optional 
 #---------------------------------------------------------------------------------
 
+if GetDepend(['RT_USING_DFS']) and GetDepend(['RT_USING_DFS_ROMFS']):
+    CPPPATH += [os.path.join(GetCurrentDir(), 'romfs')] 
+    SOURCES += ['romfs/drv_romfs.c']
+
 if GetDepend(['BSP_ENABLE_UART']):
     CPPPATH += [os.path.join(GetCurrentDir(), 'uart')] 
     SOURCES += ['uart/drv_usart.c']
@@ -83,10 +87,6 @@ if GetDepend(['BSP_ENABLE_SPI']):
 if GetDepend(['BSP_ENABLE_LCD']):
     CPPPATH += [os.path.join(GetCurrentDir(), 'lcd')] 
     SOURCES += ['lcd/drv_lcd.c']
-
-if GetDepend(['BSP_ENABLE_QSPI']):
-    CPPPATH += [os.path.join(GetCurrentDir(), 'qspi')] 
-    SOURCES += ['qspi/drv_qspi.c', 'qspi/stm32_qspi.c']
 
 #---------------------------------------------------------------------------------
 # Compiler platform configuration, optional

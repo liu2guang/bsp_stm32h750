@@ -62,7 +62,7 @@ void SystemClock_Config(void)
         while(1);
     }
     
-    PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_SPI3 | RCC_PERIPHCLK_SDMMC | RCC_PERIPHCLK_USART3;
+    PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_SPI3 | RCC_PERIPHCLK_SPI4 | RCC_PERIPHCLK_SDMMC | RCC_PERIPHCLK_USART3;
     PeriphClkInitStruct.Spi123ClockSelection = RCC_SPI123CLKSOURCE_PLL;
     PeriphClkInitStruct.Spi45ClockSelection  = RCC_SPI45CLKSOURCE_D2PCLK1;
     PeriphClkInitStruct.SdmmcClockSelection  = RCC_SDMMCCLKSOURCE_PLL;
@@ -128,6 +128,8 @@ void rt_hw_board_init(void)
 #if (__FPU_PRESENT == 1) && (__FPU_USED == 1)
     SCB->CPACR |= ((3UL << 10*2)|(3UL << 11*2));  /* set CP10 and CP11 Full Access */
 #endif
+    
+    SCB->VTOR = (uint32_t)(0x90000000); 
 
     /* Configure the system clock @ 400 MHz */
     SystemClock_Config(); 

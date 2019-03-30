@@ -5,13 +5,10 @@
  */
 #include "rtquick.h" 
 #include "board.h" 
-#include "drv_lcd.h" 
 
 int main(void)
 {      
-    rtquick_init(); 
-    
-    lcd_showimage("/mnt/sdcard/logo2.bin"); 
+    rtquick_init();    
     
     return 0; 
 }
