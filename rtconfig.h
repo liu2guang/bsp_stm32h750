@@ -190,6 +190,10 @@
 
 /* IoT - internet of things */
 
+#define PKG_USING_WEBCLIENT
+#define WEBCLIENT_DEBUG
+#define WEBCLIENT_NOT_USE_TLS
+#define PKG_USING_WEBCLIENT_LATEST_VERSION
 
 /* Wi-Fi */
 
@@ -274,5 +278,9 @@
 
 /* LCD */
 
+
+/* WIFI */
+
+#define BSP_ENABLE_WIFI
 
 #endif

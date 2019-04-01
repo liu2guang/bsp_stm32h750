@@ -61,4 +61,14 @@ menu "LCD"
         default n       
 endmenu
 
+menu "WIFI"
+    config BSP_ENABLE_WIFI
+        bool "Enable wifi drive" 
+        default y 
+        select RT_USING_LWIP
+        select BSP_ENABLE_SPI
+        select BSP_SPI_ENABLE_PORT4
+        select PKG_USING_RW007
+endmenu
+
 endmenu 

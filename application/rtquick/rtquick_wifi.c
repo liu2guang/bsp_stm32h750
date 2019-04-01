@@ -7,7 +7,7 @@
 #include "rtthread.h" 
 #include "rtdevice.h"
 
-//#if defined(BSP_ENABLE_WIFI) 
+#if defined(BSP_ENABLE_WIFI) 
 
 #include "spi_wifi_rw007.h"
 #include "lwip/ip_addr.h"
@@ -181,4 +181,4 @@ _ret:
     return ret; 
 }
 
-//#endif 
+#endif 

@@ -93,6 +93,7 @@ static rt_err_t spi_init(SPI_HandleTypeDef *hspi, struct rt_spi_configuration *c
     /* 计算能配置的最接近(不高于)于目标时钟频率的分频数 */ 
     max_hz = cfg->max_hz;  
     freq = get_spi_clk_source_freq(hspi);
+    divx = divx; 
 
     if(max_hz >= freq/4)
     {
