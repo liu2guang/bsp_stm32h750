@@ -123,6 +123,13 @@
 
 /* Socket abstraction layer */
 
+#define RT_USING_SAL
+
+/* protocol stack implement */
+
+#define SAL_USING_LWIP
+#define SAL_USING_POSIX
+#define SAL_PROTO_FAMILIES_NUM 4
 
 /* light weight TCP/IP stack */
 
@@ -142,6 +149,7 @@
 #define RT_LWIP_MSKADDR "255.255.255.0"
 #define RT_LWIP_UDP
 #define RT_LWIP_TCP
+#define RT_LWIP_RAW
 #define RT_MEMP_NUM_NETCONN 8
 #define RT_LWIP_PBUF_NUM 16
 #define RT_LWIP_RAW_PCB_NUM 4
@@ -199,6 +207,10 @@
 #define RW007_BOOT1_PIN 41
 #define RW007_INT_BUSY_PIN 46
 #define RW007_RST_PIN 45
+#define PKG_USING_NETUTILS
+#define PKG_NETUTILS_PING
+#define PKG_NETUTILS_IPERF
+#define PKG_USING_NETUTILS_LATEST_VERSION
 
 /* IoT Cloud */
 

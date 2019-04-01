@@ -41,7 +41,7 @@ rt_err_t sdcard_init(void)
     hsdcard.Init.ClockEdge           = SDMMC_CLOCK_EDGE_RISING; 
     hsdcard.Init.ClockPowerSave      = SDMMC_CLOCK_POWER_SAVE_DISABLE; 
     hsdcard.Init.BusWide             = SDMMC_BUS_WIDE_4B; 
-    hsdcard.Init.HardwareFlowControl = SDMMC_HARDWARE_FLOW_CONTROL_DISABLE; 
+    hsdcard.Init.HardwareFlowControl = SDMMC_HARDWARE_FLOW_CONTROL_ENABLE; 
     hsdcard.Init.ClockDiv            = 12; 
 
     if(HAL_SD_Init(&hsdcard) != HAL_OK)

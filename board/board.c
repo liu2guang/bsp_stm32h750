@@ -64,7 +64,15 @@ void SystemClock_Config(void)
     
     PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_SPI3 | RCC_PERIPHCLK_SPI4 | RCC_PERIPHCLK_SDMMC | RCC_PERIPHCLK_USART3;
     PeriphClkInitStruct.Spi123ClockSelection = RCC_SPI123CLKSOURCE_PLL;
-    PeriphClkInitStruct.Spi45ClockSelection  = RCC_SPI45CLKSOURCE_D2PCLK1;
+    PeriphClkInitStruct.PLL2.PLL2M           = 4;
+    PeriphClkInitStruct.PLL2.PLL2N           = 50;
+    PeriphClkInitStruct.PLL2.PLL2P           = 2;
+    PeriphClkInitStruct.PLL2.PLL2Q           = 8;
+    PeriphClkInitStruct.PLL2.PLL2R           = 2;
+    PeriphClkInitStruct.PLL2.PLL2RGE         = RCC_PLL2VCIRANGE_3;
+    PeriphClkInitStruct.PLL2.PLL2VCOSEL      = RCC_PLL2VCOWIDE;
+    PeriphClkInitStruct.PLL2.PLL2FRACN       = 0;
+    PeriphClkInitStruct.Spi45ClockSelection  = RCC_SPI45CLKSOURCE_PLL2;
     PeriphClkInitStruct.SdmmcClockSelection  = RCC_SDMMCCLKSOURCE_PLL;
     PeriphClkInitStruct.Usart234578ClockSelection = RCC_USART234578CLKSOURCE_D2PCLK1;
     

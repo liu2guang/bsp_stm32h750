@@ -18,7 +18,8 @@ Import('rtconfig')
 PKGNAME = "libstm32hal"
 VERSION = "v0.2.0"
 DEPENDS = [""]
-LIBSTM32HAL_USING_STATIC_LIB = False
+# LIBSTM32HAL_USING_STATIC_LIB = False
+LIBSTM32HAL_USING_STATIC_LIB = True
 
 #---------------------------------------------------------------------------------
 # Compile the configuration 

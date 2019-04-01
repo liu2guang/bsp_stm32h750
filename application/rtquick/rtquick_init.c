@@ -9,6 +9,7 @@
 
 extern rt_err_t rtquick_utils_init(void); 
 extern rt_err_t rtquick_mnt_init(void); 
+extern rt_err_t rtquick_wifi_init(void); 
 
 rt_err_t rtquick_init(void)
 {
@@ -16,6 +17,7 @@ rt_err_t rtquick_init(void)
 
     rtquick_utils_init(); 
     rtquick_mnt_init(); 
+    rtquick_wifi_init(); 
 
     return ret; 
 }

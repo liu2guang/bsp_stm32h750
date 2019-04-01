@@ -16,7 +16,7 @@
 #include "board.h" 
 #include "rtdevice.h"
 
-#define DBG_ENABLE 
+// #define DBG_ENABLE 
 #define DBG_SECTION_NAME "drv.spi"
 #define DBG_LEVEL        DBG_LOG
 #define DBG_COLOR
@@ -60,7 +60,10 @@ static rt_uint32_t get_spi_clk_source_freq(SPI_HandleTypeDef *hspi)
 #if defined(BSP_SPI_ENABLE_PORT4)
     if(hspi->Instance == SPI4)
     {
-        freq = (rt_uint32_t)(200 * 1000000); 
+        PLL2_ClocksTypeDef pll2 = {0}; 
+        
+        HAL_RCCEx_GetPLL2ClockFreq(&pll2); 
+        freq = (rt_uint32_t)pll2.PLL2_Q_Frequency; 
     }
 #endif 
 
@@ -78,7 +81,8 @@ static rt_err_t spi_init(SPI_HandleTypeDef *hspi, struct rt_spi_configuration *c
 
     if((cfg->data_width >= 4) && (cfg->data_width <= 32))
     {
-        hspi->Init.DataSize = cfg->data_width-1;
+        LOG_D("SPI_DATASIZE_8BIT"); 
+        hspi->Init.DataSize = SPI_DATASIZE_8BIT;
     }
     else
     {
@@ -134,47 +138,55 @@ static rt_err_t spi_init(SPI_HandleTypeDef *hspi, struct rt_spi_configuration *c
     /* CPOL */
     if(cfg->mode & RT_SPI_CPOL)
     {
+        LOG_D("SPI_POLARITY_HIGH"); 
         hspi->Init.CLKPolarity = SPI_POLARITY_HIGH;
     }
     else
     {
+        LOG_D("SPI_POLARITY_LOW"); 
         hspi->Init.CLKPolarity = SPI_POLARITY_LOW;
     } 
 
     /* CPHA */
     if(cfg->mode & RT_SPI_CPHA)
     {
+        LOG_D("SPI_PHASE_2EDGE"); 
 		hspi->Init.CLKPhase = SPI_PHASE_2EDGE;
     }
     else
     {
+        LOG_D("SPI_PHASE_1EDGE"); 
 		hspi->Init.CLKPhase = SPI_PHASE_1EDGE;
     }
 
     /* MSB or LSB */
     if(cfg->mode & RT_SPI_MSB)
     {
+        LOG_D("SPI_FIRSTBIT_MSB"); 
         hspi->Init.FirstBit = SPI_FIRSTBIT_MSB;
     }
     else
     {
+        LOG_D("SPI_FIRSTBIT_LSB"); 
         hspi->Init.FirstBit = SPI_FIRSTBIT_LSB;
     }
 
     /* SPI3强制为3线模式3WIRE */ 
     if(hspi->Instance == SPI3)
     {
+        LOG_D("SPI_DIRECTION_2LINES_TXONLY"); 
         hspi->Init.Direction = SPI_DIRECTION_2LINES_TXONLY;
     }
     else
     {
+        LOG_D("SPI_DIRECTION_2LINES"); 
         hspi->Init.Direction = SPI_DIRECTION_2LINES;
     }
 
     /* other */ 
     hspi->Init.Mode                       = SPI_MODE_MASTER;
     hspi->Init.NSS                        = SPI_NSS_SOFT;
-    hspi->Init.NSSPMode                   = SPI_NSS_PULSE_ENABLE;
+    hspi->Init.NSSPMode                   = SPI_NSS_PULSE_DISABLE;
     hspi->Init.NSSPolarity                = SPI_NSS_POLARITY_LOW;
     hspi->Init.TIMode                     = SPI_TIMODE_DISABLE;
     hspi->Init.CRCCalculation             = SPI_CRCCALCULATION_DISABLE;
@@ -186,15 +198,13 @@ static rt_err_t spi_init(SPI_HandleTypeDef *hspi, struct rt_spi_configuration *c
     hspi->Init.MasterReceiverAutoSusp     = SPI_MASTER_RX_AUTOSUSP_DISABLE;
     hspi->Init.MasterKeepIOState          = SPI_MASTER_KEEP_IO_STATE_DISABLE;
     hspi->Init.IOSwap                     = SPI_IO_SWAP_DISABLE;
-
-    HAL_SPI_DeInit(hspi); 
+    hspi->Init.FifoThreshold              = SPI_FIFO_THRESHOLD_08DATA;
+    
     if (HAL_SPI_Init(hspi) != HAL_OK)
     {
         return (-RT_ERROR); 
     }
-
-    __HAL_SPI_ENABLE(hspi); 
-
+    
     LOG_D("spi configuration."); 
 
     return RT_EOK; 
@@ -214,6 +224,9 @@ static rt_err_t configure(struct rt_spi_device *device, struct rt_spi_configurat
 
 static rt_uint32_t spixfer(struct rt_spi_device *device, struct rt_spi_message *message)
 {
+    HAL_StatusTypeDef ret; 
+    rt_uint32_t length = message->length; 
+    
     RT_ASSERT(device != RT_NULL);
     RT_ASSERT(device->bus != RT_NULL);
     RT_ASSERT(device->bus->parent.user_data != RT_NULL);
@@ -225,36 +238,55 @@ static rt_uint32_t spixfer(struct rt_spi_device *device, struct rt_spi_message *
     {
         rt_pin_write(cs->pin, PIN_LOW);
     }
-
-    if(hspi->hspi.Instance == SPI3)
+    
+    if(message->length == 0)
     {
-        HAL_SPI_Transmit(&(hspi->hspi), (rt_uint8_t *)(message->send_buf), message->length, 10); 
+        length = 0; 
+        goto _ret; 
     }
-    else
+
+    if(message->send_buf == RT_NULL && message->recv_buf == RT_NULL)
     {
-        if(HAL_SPI_TransmitReceive(&(hspi->hspi), (rt_uint8_t *)(message->send_buf), (rt_uint8_t *)(message->recv_buf), message->length, 10) != HAL_OK)  
+        LOG_E("send_buf and recv_buf is null."); 
+        while(1); 
+    }
+    else if(message->send_buf != RT_NULL && message->recv_buf == RT_NULL)
+    {
+        ret = HAL_SPI_Transmit(&(hspi->hspi), (uint8_t *)(message->send_buf), message->length, 1000); 
+        if(ret != HAL_OK)
         {
-            //LOG_D("HAL_SPI_TransmitReceive failed."); 
-            goto _failed; 
+            LOG_D("HAL_SPI_Transmit = failed.", ret); 
+            while(1); 
+        }
+    }
+    else if(message->send_buf == RT_NULL && message->recv_buf != RT_NULL)
+    {
+        ret = HAL_SPI_Receive(&(hspi->hspi), (uint8_t *)(message->recv_buf), message->length, 1000); 
+        if(ret != HAL_OK)
+        {
+            LOG_D("HAL_SPI_Receive = failed.", ret); 
+            while(1); 
+        }
+    }
+    else if(message->send_buf != RT_NULL && message->recv_buf != RT_NULL)
+    {
+        ret = HAL_SPI_TransmitReceive(&(hspi->hspi), (uint8_t *)(message->send_buf), (uint8_t *)(message->recv_buf), message->length, 1000); 
+        if(ret != HAL_OK)
+        {
+            LOG_D("HAL_SPI_TransmitReceive = failed.", ret); 
+            while(1); 
         }
     }
 
     while (HAL_SPI_GetState(&(hspi->hspi)) != HAL_SPI_STATE_READY);
     
+_ret:
     if (message->cs_release)
     {
         rt_pin_write(cs->pin, PIN_HIGH);
     }
 
-    return message->length;
-    
-_failed:
-    if (message->cs_release)
-    {
-        rt_pin_write(cs->pin, PIN_HIGH);
-    }
-    
-    return 0; 
+    return length;
 }
 
 rt_err_t stm32_spi_bus_attach_device(const char *bus_name, const char *device_name, rt_uint32_t pin)
@@ -279,6 +311,8 @@ rt_err_t stm32_spi_bus_attach_device(const char *bus_name, const char *device_na
 void HAL_SPI_MspInit(SPI_HandleTypeDef *hspi)
 {
     GPIO_InitTypeDef GPIO_InitStruct = {0};
+    
+    LOG_D("HAL_SPI_MspInit"); 
    
 #if defined(BSP_SPI_ENABLE_PORT3)     
     if(hspi->Instance == SPI3)

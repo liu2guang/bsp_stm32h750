@@ -76,4 +76,4 @@ int rt_hw_cpu_cache_init(void)
     rt_hw_cpu_dcache_enable();
     return 0;
 }
-INIT_BOARD_EXPORT(rt_hw_cpu_cache_init);
+// INIT_BOARD_EXPORT(rt_hw_cpu_cache_init);
