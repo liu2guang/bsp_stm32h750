@@ -9,7 +9,7 @@
 
 #if defined(BSP_ENABLE_WIFI) 
 
-#include "spi_wifi_rw007.h"
+#include "drv_wifi.h"
 #include "lwip/ip_addr.h"
 #include "lwip/netif.h"
 #include "dfs_file.h"

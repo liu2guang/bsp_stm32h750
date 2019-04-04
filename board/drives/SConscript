@@ -88,6 +88,10 @@ if GetDepend(['BSP_ENABLE_LCD']):
     CPPPATH += [os.path.join(GetCurrentDir(), 'lcd')] 
     SOURCES += ['lcd/drv_lcd.c']
 
+if GetDepend(['BSP_ENABLE_WIFI']):
+    CPPPATH += [os.path.join(GetCurrentDir(), 'wifi')] 
+    SOURCES += ['wifi/drv_wifi.c', 'wifi/drv_wifi_port.c']
+
 #---------------------------------------------------------------------------------
 # Compiler platform configuration, optional
 #---------------------------------------------------------------------------------

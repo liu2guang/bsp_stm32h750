@@ -68,7 +68,6 @@ menu "WIFI"
         select RT_USING_LWIP
         select BSP_ENABLE_SPI
         select BSP_SPI_ENABLE_PORT4
-        select PKG_USING_RW007
 endmenu
 
 endmenu 

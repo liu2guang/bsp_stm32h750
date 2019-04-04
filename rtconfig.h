@@ -190,10 +190,6 @@
 
 /* IoT - internet of things */
 
-#define PKG_USING_WEBCLIENT
-#define WEBCLIENT_DEBUG
-#define WEBCLIENT_NOT_USE_TLS
-#define PKG_USING_WEBCLIENT_LATEST_VERSION
 
 /* Wi-Fi */
 
@@ -202,15 +198,6 @@
 
 /* Wiced WiFi */
 
-#define PKG_USING_RW007
-#define PKG_USING_RW007_LATEST_VERSION
-#define RW007_USING_STM32_DRIVERS
-#define RW007_SPI_BUS_NAME "spi4"
-#define RW007_CS_PIN 41
-#define RW007_BOOT0_PIN 42
-#define RW007_BOOT1_PIN 41
-#define RW007_INT_BUSY_PIN 46
-#define RW007_RST_PIN 45
 #define PKG_USING_NETUTILS
 #define PKG_NETUTILS_PING
 #define PKG_NETUTILS_IPERF
@@ -224,9 +211,6 @@
 
 /* language packages */
 
-#define PKG_USING_LUA
-#define PKG_USING_LUA_V100
-#define LUA_USING_PORTING_V534
 
 /* multimedia packages */
 
@@ -282,5 +266,6 @@
 /* WIFI */
 
 #define BSP_ENABLE_WIFI
+#include "rtconfig_project.h"
 
 #endif
