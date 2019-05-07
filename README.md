@@ -35,7 +35,14 @@ STM32H750VB 板级包支持MDK5开发环境和GCC编译器，以下是具体版�
 | :------ | :----  |
 | UART | 支持串口3 |
 | SDCARD | 支持轮询方式, DMA暂时没调, 读7.3MB/s, 写4.5MB/s |
-| romfs | 支持 |
+| ROMFS | 支持 |
+| CACHE | 支持 |
+| LCD | 支持240*240 SPI屏幕: [屏幕地址](https://item.taobao.com/item.htm?spm=a1z10.5-c-s.w4002-15846751795.18.76ed7c13Cymvgx&id=565306950948) |
+| SPI | 支持 |
+| RW007 WIFI | 支持 |
+| PIN | 支持 |
+| QSPI Flash | 支持, 但是未对接RTT框架 |
+| USBDevice | 支持 |
 
 ## 5. 维护人信息
 - liu2guang: [Github](https://github.com/liu2guang). 
