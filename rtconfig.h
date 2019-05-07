@@ -113,10 +113,18 @@
 
 /* Using USB */
 
+#define RT_USING_USB_DEVICE
+#define RT_USBD_THREAD_STACK_SZ 4096
+#define USB_VENDOR_ID 0x0FFE
+#define USB_PRODUCT_ID 0x0002
+#define _RT_USB_DEVICE_MSTORAGE
+#define RT_USB_DEVICE_MSTORAGE
+#define RT_USB_MSTORAGE_DISK_NAME "flash0"
 
 /* POSIX layer and C standard library */
 
 #define RT_USING_LIBC
+#define RT_USING_PTHREADS
 #define RT_USING_POSIX
 
 /* Network */
@@ -151,18 +159,18 @@
 #define RT_LWIP_TCP
 #define RT_LWIP_RAW
 #define RT_MEMP_NUM_NETCONN 8
-#define RT_LWIP_PBUF_NUM 16
+#define RT_LWIP_PBUF_NUM 32
 #define RT_LWIP_RAW_PCB_NUM 4
 #define RT_LWIP_UDP_PCB_NUM 4
 #define RT_LWIP_TCP_PCB_NUM 4
 #define RT_LWIP_TCP_SEG_NUM 40
-#define RT_LWIP_TCP_SND_BUF 8196
-#define RT_LWIP_TCP_WND 8196
-#define RT_LWIP_TCPTHREAD_PRIORITY 10
+#define RT_LWIP_TCP_SND_BUF 12288
+#define RT_LWIP_TCP_WND 12288
+#define RT_LWIP_TCPTHREAD_PRIORITY 6
 #define RT_LWIP_TCPTHREAD_MBOX_SIZE 8
-#define RT_LWIP_TCPTHREAD_STACKSIZE 1024
+#define RT_LWIP_TCPTHREAD_STACKSIZE 2048
 #define RT_LWIP_ETHTHREAD_PRIORITY 12
-#define RT_LWIP_ETHTHREAD_STACKSIZE 1024
+#define RT_LWIP_ETHTHREAD_STACKSIZE 2048
 #define RT_LWIP_ETHTHREAD_MBOX_SIZE 8
 #define LWIP_NETIF_STATUS_CALLBACK 1
 #define SO_REUSE 1
@@ -223,8 +231,6 @@
 
 /* peripheral libraries and drivers */
 
-/* sensors drivers */
-
 
 /* miscellaneous packages */
 
@@ -232,13 +238,9 @@
 /* samples: kernel and components samples */
 
 
-/* Privated Packages of RealThread */
-
-
-/* Network Utilities */
-
-
 /* STM32 Bsp Config */
+
+#define LIBSTM32HAL_USING_LIB
 
 /* UART */
 
@@ -258,14 +260,20 @@
 /* SPI */
 
 #define BSP_ENABLE_SPI
+#define BSP_SPI_ENABLE_PORT3
 #define BSP_SPI_ENABLE_PORT4
 
 /* LCD */
 
+#define BSP_ENABLE_LCD
 
 /* WIFI */
 
 #define BSP_ENABLE_WIFI
+
+/* USBD */
+
+#define BSP_ENABLE_USBD
 #include "rtconfig_project.h"
 
 #endif

@@ -11,6 +11,29 @@
 #include "stm32h7xx_hal.h"
 
 /* RTTGameBoard drivers */ 
+#if defined(BSP_ENABLE_PIN)
+#include "drv_pin.h"
+#endif 
+
+#if defined(BSP_ENABLE_UART)
+#include "drv_usart.h"
+#endif 
+
+#if defined(BSP_ENABLE_SDCARD)
+#include "drv_sdcard.h"
+#endif 
+
+#if defined(BSP_ENABLE_SPI)
+#include "drv_spi.h"
+#endif 
+
+#if defined(BSP_ENABLE_LCD)
+#include "drv_lcd.h"
+#endif 
+
+#if defined(BSP_ENABLE_WIFI)
+#include "drv_wifi.h"
+#endif 
 
 /* RTTGameBoard pin number */ 
 #define STM32_PIN_NUM   (100)
@@ -46,9 +69,9 @@
 #define BOARD_PSRAM_END   (void *)(0xC0800000u)
 #define BOARD_PSRAM_SIZE  (((rt_uint32_t)(BOARD_PSRAM_END))-((rt_uint32_t)(BOARD_PSRAM_BEGIN)))
 
-#define BOARD_HEAP_BEGIN (void *)(HEAP_BEGIN)
-#define BOARD_HEAP_END   (void *)(BOARD_SRAM1_END)
-#define BOARD_HEAP_SIZE  (((rt_uint32_t)(BOARD_HEAP_END))-((rt_uint32_t)(BOARD_HEAP_BEGIN)))
+#define BOARD_HEAP_BEGIN  (void *)(HEAP_BEGIN)
+#define BOARD_HEAP_END    (void *)(BOARD_SRAM1_END)
+#define BOARD_HEAP_SIZE   (((rt_uint32_t)(BOARD_HEAP_END))-((rt_uint32_t)(BOARD_HEAP_BEGIN)))
 
 #endif
 

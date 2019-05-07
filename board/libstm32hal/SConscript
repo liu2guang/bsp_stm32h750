@@ -17,9 +17,7 @@ Import('rtconfig')
 #---------------------------------------------------------------------------------
 PKGNAME = "libstm32hal"
 VERSION = "v0.2.0"
-DEPENDS = [""]
-# LIBSTM32HAL_USING_STATIC_LIB = False
-LIBSTM32HAL_USING_STATIC_LIB = True
+DEPENDS = []
 
 #---------------------------------------------------------------------------------
 # Compile the configuration 
@@ -68,7 +66,7 @@ LINKFLAGS        = ""
 #---------------------------------------------------------------------------------
 # Compiler platform configuration, optional
 #---------------------------------------------------------------------------------
-if LIBSTM32HAL_USING_STATIC_LIB == True: 
+if GetDepend(['LIBSTM32HAL_USING_LIB']) == True:
     if rtconfig.CROSS_TOOL == "keil" and GetDepend(['SOC_STM32F469NI']) == True: 
         LIBS    += ["libstm32hal_f469_armcc"]
         LIBPATH += [GetCurrentDir() + "/libstm32hal/libstm32hal_f469_armcc"] 
@@ -86,7 +84,7 @@ if LIBSTM32HAL_USING_STATIC_LIB == True:
         LIBS    += ["libstm32hal_h750_gcc"]
         LIBPATH += [GetCurrentDir() + "/libstm32hal/libstm32hal_h750_gcc"] 
         CPPPATH += [GetCurrentDir() + "/libstm32hal/libstm32hal_h750_gcc"] 
-else:
+elif GetDepend(['LIBSTM32HAL_USING_SRC']) == True:
     if GetDepend(['SOC_STM32F469NI']) == True:
         SOURCES += Glob('libstm32hal/libstm32hal_f4xx/*.c')
         CPPPATH += [GetCurrentDir() + "/libstm32hal/libstm32hal_f4xx"] 
@@ -117,7 +115,7 @@ if GetDepend(DEPENDS):
 #---------------------------------------------------------------------------------
 # Main target
 #---------------------------------------------------------------------------------
-objs = DefineGroup(name = PKGNAME, src = SOURCES, depend = DEPENDS, 
+objs += DefineGroup(name = PKGNAME, src = SOURCES, depend = DEPENDS, 
                    CPPPATH          = CPPPATH, 
                    CCFLAGS          = CCFLAGS, 
                    ASFLAGS          = ASFLAGS, 

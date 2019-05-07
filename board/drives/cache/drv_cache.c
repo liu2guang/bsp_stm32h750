@@ -73,7 +73,7 @@ void rt_hw_cpu_dcache_ops(int ops, void *addr, int size)
 int rt_hw_cpu_cache_init(void)
 {
     rt_hw_cpu_icache_enable();
-    rt_hw_cpu_dcache_enable();
+    // rt_hw_cpu_dcache_enable();
     return 0;
 }
 // INIT_BOARD_EXPORT(rt_hw_cpu_cache_init);

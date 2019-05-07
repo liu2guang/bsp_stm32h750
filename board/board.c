@@ -56,7 +56,7 @@ void SystemClock_Config(void)
     RCC_ClkInitStruct.APB2CLKDivider = RCC_APB2_DIV2;
     RCC_ClkInitStruct.APB4CLKDivider = RCC_APB4_DIV2;
 
-    ret = HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2); 
+    ret = HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_4); 
     if (ret != HAL_OK)
     {
         while(1);
@@ -137,7 +137,8 @@ void rt_hw_board_init(void)
     SCB->CPACR |= ((3UL << 10*2)|(3UL << 11*2));  /* set CP10 and CP11 Full Access */
 #endif
     
-    SCB->VTOR = (uint32_t)(0x90000000); 
+    /* Redefine interrupt vector table: ext qspi flash */ 
+    // SCB->VTOR = (uint32_t)(0x90000000); 
 
     /* Configure the system clock @ 400 MHz */
     SystemClock_Config(); 

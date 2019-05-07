@@ -23,7 +23,7 @@
 #define RW007_LOG_LEVEL DBG_LOG
 #endif
 
-//#define DBG_ENABLE
+#define DBG_ENABLE
 #define DBG_SECTION_NAME "[RW007]"
 #define DBG_LEVEL RW007_LOG_LEVEL
 #define DBG_COLOR
@@ -561,7 +561,7 @@ rt_err_t rt_hw_wifi_init(const char *spi_device_name, wifi_mode_t mode)
         struct rt_spi_configuration cfg;
         cfg.data_width = 8;
         cfg.mode = RT_SPI_MODE_0 | RT_SPI_MSB; /* SPI Compatible: Mode 0. */
-        cfg.max_hz = 30 * 1000000;             /* max 30M */
+        cfg.max_hz = 1 * 1000 * 1000;             /* max 30M */
         rt_spi_configure(rw007_wifi_device.rt_spi_device, &cfg);
     }
 

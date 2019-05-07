@@ -9,7 +9,7 @@
 
 int main(void)
 {      
-    rtquick_init();   
+    rtquick_init();
     
     return 0; 
 }

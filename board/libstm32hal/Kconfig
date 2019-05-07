@@ -1,0 +1,9 @@
+choice
+    prompt "HAL"
+    default LIBSTM32HAL_USING_LIB
+
+    config LIBSTM32HAL_USING_LIB
+        bool "LIB"
+    config LIBSTM32HAL_USING_SRC
+        bool "CODE" 
+endchoice

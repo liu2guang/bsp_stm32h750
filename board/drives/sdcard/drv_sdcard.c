@@ -98,8 +98,7 @@ void HAL_SD_MspInit(SD_HandleTypeDef *hsdcard)
     HAL_NVIC_SetPriority(SDMMC1_IRQn, 2, 0);
     HAL_NVIC_EnableIRQ(SDMMC1_IRQn);
 
-    hdma_rx.Instance = DMA2_Stream3;
-
+    hdma_rx.Instance                 = DMA2_Stream3;
     hdma_rx.Init.Channel             = DMA_CHANNEL_4;
     hdma_rx.Init.Direction           = DMA_PERIPH_TO_MEMORY;
     hdma_rx.Init.PeriphInc           = DMA_PINC_DISABLE;

@@ -374,7 +374,6 @@ int rt_hw_flash_init(void)
     GPIO_InitStruct.Alternate = GPIO_AF10_QUADSPI;
     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-    /* ≥ı ºªØQSPI */ 
     __HAL_RCC_QSPI_CLK_ENABLE();
 
     hqspi.Instance = QUADSPI;

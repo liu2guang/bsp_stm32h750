@@ -1,1 +1,4 @@
+menu "STM32 Bsp Config" 
+source "$BSP_DIR/board/libstm32hal/Kconfig" 
 source "$BSP_DIR/board/drives/Kconfig" 
+endmenu 

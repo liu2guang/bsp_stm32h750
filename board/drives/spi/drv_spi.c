@@ -16,7 +16,7 @@
 #include "board.h" 
 #include "rtdevice.h"
 
-// #define DBG_ENABLE 
+#define DBG_ENABLE 
 #define DBG_SECTION_NAME "drv.spi"
 #define DBG_LEVEL        DBG_LOG
 #define DBG_COLOR
@@ -28,10 +28,16 @@ struct stm32_spi
     struct rt_spi_configuration *cfg;
 };
 
+rt_uint8_t TXRX_flag; 
+
 struct stm32_spi_cs
 {
     rt_uint32_t pin;
 };
+
+int f = 0; 
+DMA_HandleTypeDef hdma_rx;
+DMA_HandleTypeDef hdma_tx; 
 
 #if defined(BSP_SPI_ENABLE_PORT3)
 static struct stm32_spi spi3 = {.hspi.Instance = SPI3}; 
@@ -201,6 +207,49 @@ static rt_err_t spi_init(SPI_HandleTypeDef *hspi, struct rt_spi_configuration *c
     hspi->Init.IOSwap                     = SPI_IO_SWAP_DISABLE;
     hspi->Init.FifoThreshold              = SPI_FIFO_THRESHOLD_08DATA;
     
+    /* DMA */     
+    __HAL_RCC_DMA2_CLK_ENABLE();
+    
+    hdma_rx.Instance                 = DMA2_Stream3;
+    hdma_rx.Init.FIFOMode            = DMA_FIFOMODE_DISABLE;
+    hdma_rx.Init.FIFOThreshold       = DMA_FIFO_THRESHOLD_FULL;
+    hdma_rx.Init.Request             = DMA_REQUEST_SPI4_RX;
+    hdma_rx.Init.Direction           = DMA_PERIPH_TO_MEMORY;
+    hdma_rx.Init.PeriphInc           = DMA_PINC_DISABLE;
+    hdma_rx.Init.MemInc              = DMA_MINC_ENABLE;
+    hdma_rx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+    hdma_rx.Init.MemDataAlignment    = DMA_MDATAALIGN_BYTE;
+    hdma_rx.Init.Mode                = DMA_NORMAL;
+    hdma_rx.Init.Priority            = DMA_PRIORITY_HIGH;
+    hdma_rx.Init.MemBurst            = DMA_MBURST_INC4;
+    hdma_rx.Init.PeriphBurst         = DMA_PBURST_INC4;
+    
+    __HAL_LINKDMA(hspi, hdmarx, hdma_rx);
+    HAL_DMA_DeInit(&hdma_rx);
+    HAL_DMA_Init(&hdma_rx);
+    HAL_NVIC_SetPriority(DMA2_Stream3_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(DMA2_Stream3_IRQn);
+    
+    hdma_tx.Instance                 = DMA2_Stream4;
+    hdma_tx.Init.FIFOMode            = DMA_FIFOMODE_DISABLE;
+    hdma_tx.Init.FIFOThreshold       = DMA_FIFO_THRESHOLD_FULL;
+    hdma_tx.Init.Request             = DMA_REQUEST_SPI4_TX;
+    hdma_tx.Init.Direction           = DMA_MEMORY_TO_PERIPH;
+    hdma_tx.Init.PeriphInc           = DMA_PINC_DISABLE;
+    hdma_tx.Init.MemInc              = DMA_MINC_ENABLE;
+    hdma_tx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+    hdma_tx.Init.MemDataAlignment    = DMA_MDATAALIGN_BYTE;
+    hdma_tx.Init.Mode                = DMA_NORMAL;
+    hdma_tx.Init.Priority            = DMA_PRIORITY_LOW;
+    hdma_tx.Init.MemBurst            = DMA_MBURST_INC4;
+    hdma_tx.Init.PeriphBurst         = DMA_PBURST_INC4;
+
+    __HAL_LINKDMA(hspi, hdmatx, hdma_tx);
+    HAL_DMA_DeInit(&hdma_tx);
+    HAL_DMA_Init(&hdma_tx);
+    HAL_NVIC_SetPriority(DMA2_Stream4_IRQn, 0, 1);
+    HAL_NVIC_EnableIRQ(DMA2_Stream4_IRQn);
+    
     if (HAL_SPI_Init(hspi) != HAL_OK)
     {
         return (-RT_ERROR); 
@@ -209,6 +258,22 @@ static rt_err_t spi_init(SPI_HandleTypeDef *hspi, struct rt_spi_configuration *c
     LOG_D("spi configuration."); 
 
     return RT_EOK; 
+}
+
+void DMA2_Stream3_IRQHandler(void)
+{
+    rt_interrupt_enter();
+    HAL_DMA_IRQHandler(spi4.hspi.hdmarx);
+    LOG_W("DMA2_Stream3_IRQHandler"); 
+    rt_interrupt_leave();
+}
+
+void DMA2_Stream4_IRQHandler(void)
+{
+    rt_interrupt_enter();
+    HAL_DMA_IRQHandler(spi4.hspi.hdmatx);
+    LOG_W("DMA2_Stream4_IRQHandler"); 
+    rt_interrupt_leave();
 }
 
 static rt_err_t configure(struct rt_spi_device *device, struct rt_spi_configuration *cfg)
@@ -244,7 +309,7 @@ static rt_uint32_t spixfer(struct rt_spi_device *device, struct rt_spi_message *
     {
         length = 0; 
         goto _ret; 
-    }
+    }  
 
     if(message->send_buf == RT_NULL && message->recv_buf == RT_NULL)
     {
@@ -253,7 +318,10 @@ static rt_uint32_t spixfer(struct rt_spi_device *device, struct rt_spi_message *
     }
     else if(message->send_buf != RT_NULL && message->recv_buf == RT_NULL)
     {
-        ret = HAL_SPI_Transmit(&(hspi->hspi), (uint8_t *)(message->send_buf), message->length, 1000); 
+        // LOG_I("HAL_SPI_Transmit_DMA");  
+        // rt_hw_cpu_dcache_ops(RT_HW_CACHE_FLUSH | RT_HW_CACHE_INVALIDATE, (void *)(message->send_buf), message->length); 
+        // ret = HAL_SPI_Transmit(&(hspi->hspi), (uint8_t *)(message->send_buf), message->length, 1000); 
+        ret = HAL_SPI_Transmit_DMA(&(hspi->hspi), (uint8_t *)(message->send_buf), message->length); 
         if(ret != HAL_OK)
         {
             LOG_D("HAL_SPI_Transmit = failed.", ret); 
@@ -262,7 +330,10 @@ static rt_uint32_t spixfer(struct rt_spi_device *device, struct rt_spi_message *
     }
     else if(message->send_buf == RT_NULL && message->recv_buf != RT_NULL)
     {
-        ret = HAL_SPI_Receive(&(hspi->hspi), (uint8_t *)(message->recv_buf), message->length, 1000); 
+        //LOG_I("HAL_SPI_Receive_DMA");  
+        //rt_hw_cpu_dcache_ops(RT_HW_CACHE_FLUSH | RT_HW_CACHE_INVALIDATE, (void *)(message->recv_buf), message->length);
+        // ret = HAL_SPI_Receive(&(hspi->hspi), (uint8_t *)(message->recv_buf), message->length, 1000); 
+        ret = HAL_SPI_Receive_DMA(&(hspi->hspi), (uint8_t *)(message->recv_buf), message->length); 
         if(ret != HAL_OK)
         {
             LOG_D("HAL_SPI_Receive = failed.", ret); 
@@ -271,16 +342,20 @@ static rt_uint32_t spixfer(struct rt_spi_device *device, struct rt_spi_message *
     }
     else if(message->send_buf != RT_NULL && message->recv_buf != RT_NULL)
     {
-        ret = HAL_SPI_TransmitReceive(&(hspi->hspi), (uint8_t *)(message->send_buf), (uint8_t *)(message->recv_buf), message->length, 1000); 
+        //LOG_I("HAL_SPI_TransmitReceive_DMA"); 
+        //rt_hw_cpu_dcache_ops(RT_HW_CACHE_FLUSH | RT_HW_CACHE_INVALIDATE, (void *)(message->send_buf), message->length); 
+        //rt_hw_cpu_dcache_ops(RT_HW_CACHE_FLUSH | RT_HW_CACHE_INVALIDATE, (void *)(message->recv_buf), message->length); 
+        // ret = HAL_SPI_TransmitReceive(&(hspi->hspi), (uint8_t *)(message->send_buf), (uint8_t *)(message->recv_buf), message->length, 1000); 
+        ret = HAL_SPI_TransmitReceive_DMA(&(hspi->hspi), (uint8_t *)(message->send_buf), (uint8_t *)(message->recv_buf), message->length); 
         if(ret != HAL_OK)
         {
             LOG_D("HAL_SPI_TransmitReceive = failed.", ret); 
             while(1); 
         }
     }
-
-    while (HAL_SPI_GetState(&(hspi->hspi)) != HAL_SPI_STATE_READY);
     
+    while(HAL_SPI_GetState(&(hspi->hspi)) != HAL_SPI_STATE_READY);
+
 _ret:
     if (message->cs_release)
     {
@@ -379,4 +454,4 @@ int rt_hw_spi_init(void)
 
     return RT_EOK; 
 }
-INIT_DEVICE_EXPORT(rt_hw_spi_init);
+INIT_BOARD_EXPORT(rt_hw_spi_init);
