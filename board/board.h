@@ -35,6 +35,10 @@
 #include "drv_wifi.h"
 #endif 
 
+#if defined(BSP_ENABLE_PSRAM)
+#include "drv_psram.h"
+#endif 
+
 /* RTTGameBoard pin number */ 
 #define STM32_PIN_NUM   (100)
 

@@ -36,3 +36,4 @@ JLinkSettings.ini
 /cconfig.h
 /.sconsign.dblite
 /EventRecorderStub.scvd
+.vscode

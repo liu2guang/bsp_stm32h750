@@ -19,7 +19,7 @@ rt_err_t rtquick_init(void)
     rtquick_mnt_init(); 
     
 #if defined(BSP_ENABLE_WIFI) 
-    rtquick_wifi_init(); 
+    // rtquick_wifi_init(); 
 #endif
 
     return ret; 

@@ -69,6 +69,12 @@ menu "WIFI"
         select BSP_SPI_ENABLE_PORT4
 endmenu 
 
+menu "PSRAM"
+    config BSP_ENABLE_PSRAM
+        bool "Enable psram drive" 
+        default y 
+endmenu 
+
 menu "USBD"
     config BSP_ENABLE_USBD
         bool "Enable usbd drive" 

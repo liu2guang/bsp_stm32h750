@@ -116,10 +116,13 @@
 #define RT_USING_USB_DEVICE
 #define RT_USBD_THREAD_STACK_SZ 4096
 #define USB_VENDOR_ID 0x0FFE
-#define USB_PRODUCT_ID 0x0002
-#define _RT_USB_DEVICE_MSTORAGE
-#define RT_USB_DEVICE_MSTORAGE
-#define RT_USB_MSTORAGE_DISK_NAME "flash0"
+#define USB_PRODUCT_ID 0x0010
+#define _RT_USB_DEVICE_CDC
+#define RT_USB_DEVICE_CDC
+#define RT_VCOM_TASK_STK_SIZE 512
+#define RT_VCOM_SERNO "32021919830108"
+#define RT_VCOM_SER_LEN 14
+#define RT_VCOM_TX_TIMEOUT 1000
 
 /* POSIX layer and C standard library */
 
@@ -240,7 +243,7 @@
 
 /* STM32 Bsp Config */
 
-#define LIBSTM32HAL_USING_LIB
+#define LIBSTM32HAL_USING_SRC
 
 /* UART */
 
@@ -270,6 +273,10 @@
 /* WIFI */
 
 #define BSP_ENABLE_WIFI
+
+/* PSRAM */
+
+#define BSP_ENABLE_PSRAM
 
 /* USBD */
 

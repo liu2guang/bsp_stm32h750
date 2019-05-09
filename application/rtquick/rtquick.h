@@ -11,5 +11,6 @@
 #include "rtdevice.h" 
 
 extern rt_err_t rtquick_init(void); 
+extern void hexdump(const rt_uint8_t *p, rt_size_t len); 
 
 #endif
