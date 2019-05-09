@@ -43,6 +43,7 @@ STM32H750VB 板级包支持MDK5开发环境和GCC编译器，以下是具体版�
 | PIN | 支持 |
 | QSPI Flash | 支持, 但是未对接RTT框架 |
 | USBDevice | 支持 |
+| PSRAM | 支持, 由于ST QSPI硬件的原因, 无法支持memmap模式 |
 
 ## 5. 维护人信息
 - liu2guang: [Github](https://github.com/liu2guang). 
